@@ -5,7 +5,7 @@ const tableBody = document.querySelector("#table-body");
 const kProductAPI = '/api'
 let allData = [];
 
-function appendCar(table, car) {
+const appendCar = (table, car) => {
   if (car.year < 0) car.year = '';
   let row = document.createElement('tr');
   const cells = `
@@ -26,8 +26,7 @@ const loadTable = () => {
     response.forEach((car)=>{
       appendCar(tableBody, car);
     });
-  }
-  );
+  });
 };
 
 const addCar = (e) => {
@@ -46,11 +45,15 @@ const addCar = (e) => {
     car.description = description;
 
   const id = allData.at(-1).id + 1;
-  fetch(`${kProductAPI}/${id}`,{method: 'POST', headers: {'Content-type':'application/json'},body:JSON.stringify(car)})
-  .then((res)=>res.json()).then((car)=>{
-    appendCar(tableBody, car);
-    allData.push(car);
-  });
+  fetch(`${kProductAPI}/${id}`,
+    {
+      method: 'POST',
+      headers: {'Content-type':'application/json'},
+      body:JSON.stringify(car)
+    }).then((res)=>res.json()).then((car)=>{
+      appendCar(tableBody, car);
+      allData.push(car);
+    });
 };
 
 document.querySelector('#car-form').addEventListener('submit', addCar);
