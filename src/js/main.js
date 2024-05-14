@@ -15,8 +15,12 @@ const appendCar = (table, car) => {
     <td>${car.description}</td>
     <td>${car.year}</td>
     <td>${car.kilometers}</td>
-    <td>${car.price}</td>`;
+    <td>${car.price}</td>
+    <td><button class="btn btn-warning btn-edit" data-id="${car.id}" >Edit</button></td>
+    <td><button class="btn btn-danger btn-delete" data-id="${car.id}" >Delete</button></td>`;
   row.innerHTML = cells;
+  const deleteBtn = row.querySelector(".btn-delete");
+  deleteBtn.addEventListener('click',deleteCar);
   table.append(row);
 }
 
@@ -55,6 +59,21 @@ const addCar = (e) => {
       allData.push(car);
     });
 };
+
+const deleteCar = (e) => {
+  const id = e.target.getAttribute('data-id');
+  fetch(`${kProductAPI}/${id}`,
+    {
+      method: 'DELETE'
+    }).then((res)=>res.json()).then((car)=>{
+      allData.splice(allData.findIndex(x=>x.id==car.id),1);
+      for(let i=0; i<tableBody.children.length; ++i) {
+        if (tableBody.children[i].children[0].innerHTML == car.id) {
+          tableBody.children[i].remove();
+        }
+      }
+    });
+}
 
 document.querySelector('#car-form').addEventListener('submit', addCar);
 
