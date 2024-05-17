@@ -5,6 +5,9 @@ const tableBody = document.querySelector("#table-body");
 const kProductAPI = '/api'
 let allData = [];
 
+//TODO: Validate values on JS
+//TODO: Add pagination
+
 const appendCar = (table, car) => {
   if (car.year < 0) car.year = '';
   let row = document.createElement('tr');
@@ -33,6 +36,15 @@ const loadTable = () => {
   });
 };
 
+const clearAddForm = () => {
+  document.querySelector('#brand').selectedIndex = 0;
+  document.querySelector('#model').value = "";
+  document.querySelector('#description').value = "";
+  document.querySelector('#kilometers').value = "";
+  document.querySelector('#price').value = "";
+  document.querySelector('#year').value = "";
+};
+
 const addCar = (e) => {
   e.preventDefault();
   const year  = document.querySelector('#year').value;
@@ -48,7 +60,7 @@ const addCar = (e) => {
   if (description)
     car.description = description;
 
-  const id = allData.at(-1).id + 1;
+  const id = allData.length > 0 ? allData.at(-1).id + 1 : 1;
   fetch(`${kProductAPI}/${id}`,
     {
       method: 'POST',
@@ -57,6 +69,7 @@ const addCar = (e) => {
     }).then((res)=>res.json()).then((car)=>{
       appendCar(tableBody, car);
       allData.push(car);
+      clearAddForm();
     });
 };
 
