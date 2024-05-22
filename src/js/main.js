@@ -5,8 +5,17 @@ const tableBody = document.querySelector("#table-body");
 const kProductAPI = '/api'
 let allData = [];
 
-//TODO: Validate values on JS
 //TODO: Add pagination
+
+const validateFormValues = (car) => {
+  if (car.model.length > 50) return false;
+  if (car.description.length > 100) return false;
+  if (car.year > 9000) return false;
+  if (car.brand > 50) return false;
+  if (car.kilometers > 1000000) return false;
+  if (car.price > 10000000) return false;
+  return true;
+}
 
 const appendCar = (table, car) => {
   if (car.year < 0) car.year = '';
@@ -59,6 +68,11 @@ const addCar = (e) => {
     car.year = year;
   if (description)
     car.description = description;
+
+  if (!validateFormValues(car)) {
+    //TODO: Set CSS attribute to invalid
+    return;
+  }
 
   const id = allData.length > 0 ? allData.at(-1).id + 1 : 1;
   fetch(`${kProductAPI}/${id}`,
@@ -130,7 +144,10 @@ const editCar = (e) => {
   };
   if (year) car.year = year;
   if (description) car.description = description;
-  console.log(car);
+
+
+  //TODO: Set CSS attribute for invalid format
+  if(!validateFormValues(car)) return;
 
   fetch(`${kProductAPI}/${id}`, {
       method: 'PATCH',
