@@ -1,0 +1,11 @@
+@import "bootstrap/scss/bootstrap";
+
+.btn-edit {
+    @extend .btn;
+    @extend .btn-warning;
+}
+
+.btn-delete {
+    @extend .btn;
+    @extend .btn-danger;
+}
