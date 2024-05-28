@@ -30,7 +30,7 @@ const appendCar = (table, car) => {
     <td><button class="btn-delete" data-id="${car.id}" >Delete</button></td>`;
   row.innerHTML = cells;
   const deleteBtn = row.querySelector(".btn-delete");
-  deleteBtn.addEventListener('click',deleteCar);
+  deleteBtn.addEventListener('click', deleteCarDialog);
   table.append(row);
 }
 
@@ -95,8 +95,12 @@ const addCar = (e) => {
     });
 };
 
+const confirmModalEl = document.getElementById('deleteConfirm');
+const confirmModal = new bootstrap.Modal(confirmModalEl);
+const confirmForm = document.getElementById('delete_form');
+
 const deleteCar = (e) => {
-  const id = e.target.getAttribute('data-id');
+  const id = e.target.querySelector('#delete_id').innerText;
   fetch(`${kProductAPI}/${id}`,
     {
       method: 'DELETE'
@@ -108,7 +112,18 @@ const deleteCar = (e) => {
           break;
         }
       }
+    })
+    .finally( () => {
+      confirmModal.hide();
     });
+};
+
+confirmForm.addEventListener('submit', deleteCar);
+
+const deleteCarDialog = (e) => {
+  const id = e.target.getAttribute('data-id');
+  confirmModalEl.querySelector('#delete_id').innerText = id;
+  confirmModal.show();
 };
 
 const editModalEl = document.getElementById('editModal');
