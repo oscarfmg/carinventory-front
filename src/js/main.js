@@ -5,8 +5,6 @@ const tableBody = document.querySelector("#table-body");
 const kProductAPI = '/api'
 let allData = [];
 
-//TODO: Add pagination
-
 const validateFormValues = (car) => {
   if (car.model.length > 50) return false;
   if (car.description.length > 100) return false;
@@ -32,17 +30,27 @@ const appendCar = (table, car) => {
     <td><button class="btn-delete" data-id="${car.id}" >Delete</button></td>`;
   row.innerHTML = cells;
   const deleteBtn = row.querySelector(".btn-delete");
-  deleteBtn.addEventListener('click',deleteCar);
+  deleteBtn.addEventListener('click', deleteCarDialog);
   table.append(row);
 }
 
-const loadTable = () => {
-  const data = fetch(kProductAPI).then((res)=>res.json()).then((response)=>{
+const loadTable = (start, limit) => {
+  fetch(`${kProductAPI}?start=${start}&limit=${limit}`).then((res)=>res.json()).then((response)=>{
     allData = response;
     response.forEach((car)=>{
       appendCar(tableBody, car);
     });
   });
+};
+
+const clearTable = () => {
+  tableBody.replaceChildren();
+};
+
+const getTableCount = async ()  => {
+  const response = await fetch(`${kProductAPI}/getCount`);
+  const json = await response.json();
+  return json.count;
 };
 
 const clearAddForm = () => {
@@ -87,8 +95,12 @@ const addCar = (e) => {
     });
 };
 
+const confirmModalEl = document.getElementById('deleteConfirm');
+const confirmModal = new bootstrap.Modal(confirmModalEl);
+const confirmForm = document.getElementById('delete_form');
+
 const deleteCar = (e) => {
-  const id = e.target.getAttribute('data-id');
+  const id = e.target.querySelector('#delete_id').innerText;
   fetch(`${kProductAPI}/${id}`,
     {
       method: 'DELETE'
@@ -100,7 +112,18 @@ const deleteCar = (e) => {
           break;
         }
       }
+    })
+    .finally( () => {
+      confirmModal.hide();
     });
+};
+
+confirmForm.addEventListener('submit', deleteCar);
+
+const deleteCarDialog = (e) => {
+  const id = e.target.getAttribute('data-id');
+  confirmModalEl.querySelector('#delete_id').innerText = id;
+  confirmModal.show();
 };
 
 const editModalEl = document.getElementById('editModal');
@@ -176,4 +199,80 @@ const editCar = (e) => {
 document.querySelector('#car-edit-form').addEventListener('submit', editCar);
 document.querySelector('#car-form').addEventListener('submit', addCar);
 
-loadTable();
+const limit = 4;
+let page = 0;
+
+const totalCars = await getTableCount();
+const pages = Math.ceil(totalCars / limit);
+const tableLimit = totalCars <= limit ? 0 : limit;
+loadTable(page * limit, tableLimit);
+
+const navbar = document.querySelector('#nav_bar');
+const navNext = document.querySelector('#nav_next');
+const navPrev = document.querySelector('#nav_prev');
+
+const initPagination = () => {
+  for (let i=1; i<=pages; ++i) {
+    let navli = document.createElement('li'); 
+    navli.classList.add('page-item');
+    let nava = document.createElement('a');
+    nava.classList.add('page-link');
+    nava.href = '#';
+    nava.innerText = `${i}`;
+    if (i == 1) {
+      navli.classList.add('active');
+    }
+
+    nava.addEventListener('click', (event) => {
+      event.preventDefault();
+      const tgtPage = parseInt(event.target.innerText);
+      clearTable();
+      navbar.querySelectorAll('.active').forEach((e)=>{e.classList.remove('active')});
+      navbar.querySelectorAll('.disabled').forEach((e)=>{e.classList.remove('disabled')});
+      loadTable((tgtPage - 1)  * limit, tableLimit);
+      event.target.classList.add('active');
+
+      if (tgtPage == 1) {
+        navPrev.classList.add('disabled');
+      }
+      else if(tgtPage == pages) {
+        navNext.classList.add('disabled');
+      }
+    });
+
+    navli.append(nava);
+    navbar.insertBefore(navli, navNext);
+  }
+};
+
+navPrev.addEventListener('click', (event) => {
+  event.preventDefault();
+  const active = parseInt(navbar.querySelector('.active').innerText);
+  const tgtPage = active - 1;
+  const childs = navbar.children;
+  for(let i=0; i<childs.length; ++i) {
+    if (childs[i].innerText == tgtPage) {
+      childs[i].firstChild.dispatchEvent(new Event('click'));
+      return;
+    }
+  }
+});
+navNext.addEventListener('click', (event) => {
+  event.preventDefault();
+  const active = parseInt(navbar.querySelector('.active').innerText);;
+  const tgtPage = parseInt(active) + 1;
+  const childs = navbar.children;
+  for (let i = 0; i < childs.length; ++i) {
+    if (childs[i].innerText == tgtPage) {
+      childs[i].firstChild.dispatchEvent(new Event('click'));
+      return;
+    }
+  }
+});
+
+if (tableLimit == 0) {
+  navbar.remove();
+} else {
+  initPagination();
+  navPrev.classList.add('disabled');
+}
