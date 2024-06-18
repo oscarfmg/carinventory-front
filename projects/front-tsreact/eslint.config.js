@@ -16,10 +16,3 @@ export default [
   pluginReactConfig,
   { rules: { 'react/react-in-jsx-scope': 'off' } },
 ];
-
-// module.exports = [
-//   {
-//     ...require('eslint-config-love'),
-//     files: ["**/*.js", "**/*.ts"],
-//   }
-// ]
