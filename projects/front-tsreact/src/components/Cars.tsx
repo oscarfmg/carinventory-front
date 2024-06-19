@@ -9,7 +9,7 @@ interface Props {
 
 export const Cars: React.FC<Props> = ({ cars }) => {
   return (
-    <Table bordered hover striped>
+    <Table hover striped>
       <thead>
         <tr>
           <th>id</th>
@@ -19,6 +19,7 @@ export const Cars: React.FC<Props> = ({ cars }) => {
           <th>Year</th>
           <th>Kilometers</th>
           <th>Price</th>
+          <th></th>
           <th></th>
         </tr>
       </thead>
