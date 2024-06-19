@@ -1,9 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import Table from 'react-bootstrap/Table';
 import { useState } from 'react';
+import { Cars } from './components/Cars';
+import type { CarList } from './types';
 
-const mockCars = [
+const mockCars: CarList = [
   {
     id: 1,
     model: 'uno',
@@ -47,34 +48,7 @@ function App(): JSX.Element {
   return (
     <>
       <h1>Car Inventory</h1>
-      <Table bordered hover striped>
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>Brand</th>
-            <th>Model</th>
-            <th>Description</th>
-            <th>Year</th>
-            <th>Kilometers</th>
-            <th>Price</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {cars.map((car) => (
-            <tr key={car.id}>
-              <td>{car.id}</td>
-              <td>{car.brand}</td>
-              <td>{car.model}</td>
-              <td>{car.description}</td>
-              <td>{car.year}</td>
-              <td>{car.kilometers}</td>
-              <td>{car.price}</td>
-              <td></td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <Cars cars={cars} />
     </>
   );
 }
