@@ -16,4 +16,6 @@ export type CarYear = Pick<Car, 'year'>;
 export type CarKilometers = Pick<Car, 'kilometers'>;
 export type CarPrice = Pick<Car, 'price'>;
 
+export type NewCar = Omit<Car, 'id'>;
+
 export type CarList = Car[];
