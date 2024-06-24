@@ -1,6 +1,5 @@
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 import { type Car as CarType } from '../types';
-import { useEffect } from 'react';
 
 interface Props {
   visible: boolean;
@@ -48,11 +47,6 @@ export const UpdateCar: React.FC<Props> = ({
     updateCar(newCar);
     hideDialog();
   };
-
-  useEffect(() => {
-    console.log(`QTFG ${updateDlgData.kilometers}`);
-    console.log(updateDlgData);
-  }, [updateDlgData]);
 
   return (
     <Modal show={visible} onHide={hideDialog}>
