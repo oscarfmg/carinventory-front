@@ -6,10 +6,10 @@ import Table from 'react-bootstrap/Table';
 interface Props {
   cars: CarList;
   deleteCar: (id: number) => void;
-  setModalShow: (show: boolean, id: number) => void;
+  setUpdateId: (id: number) => void;
 }
 
-export const Cars: React.FC<Props> = ({ cars, deleteCar, setModalShow }) => {
+export const Cars: React.FC<Props> = ({ cars, deleteCar, setUpdateId }) => {
   return (
     <Table hover striped>
       <thead>
@@ -37,7 +37,7 @@ export const Cars: React.FC<Props> = ({ cars, deleteCar, setModalShow }) => {
             kilometers={car.kilometers}
             price={car.price}
             deleteCar={deleteCar}
-            setModalShow={setModalShow}
+            setUpdateId={setUpdateId}
           />
         ))}
       </tbody>

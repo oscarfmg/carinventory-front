@@ -4,7 +4,7 @@ import React from 'react';
 
 interface Props extends CarType {
   deleteCar: (id: number) => void;
-  setModalShow: (show: boolean, id: number) => void;
+  setUpdateId: (id: number) => void;
 }
 
 export const Car: React.FC<Props> = ({
@@ -16,7 +16,7 @@ export const Car: React.FC<Props> = ({
   kilometers,
   price,
   deleteCar,
-  setModalShow,
+  setUpdateId,
 }) => {
   return (
     <>
@@ -32,7 +32,7 @@ export const Car: React.FC<Props> = ({
           <Button
             variant="warning"
             onClick={() => {
-              setModalShow(true, id);
+              setUpdateId(id);
             }}
           >
             Edit

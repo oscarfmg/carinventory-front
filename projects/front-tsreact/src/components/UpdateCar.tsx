@@ -1,5 +1,6 @@
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 import { type Car as CarType } from '../types';
+import { useEffect } from 'react';
 
 interface Props {
   visible: boolean;
@@ -10,8 +11,8 @@ interface Props {
 
 export const UpdateCar: React.FC<Props> = ({
   visible,
-  hideDialog,
   updateDlgData,
+  hideDialog,
   updateCar,
 }) => {
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
@@ -21,15 +22,15 @@ export const UpdateCar: React.FC<Props> = ({
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
 
-    const brand = formData.get('brand') as string;
-    const model = formData.get('model') as string;
-    const description = formData.get('description') as string;
+    const brand = formData.get('updtBrand') as string;
+    const model = formData.get('updtModel') as string;
+    const description = formData.get('updtDescription') as string;
     const year =
-      formData.get('year') === ''
+      formData.get('updtYear') === ''
         ? -1
-        : (formData.get('year') as unknown as number);
-    const kilometers = formData.get('kilometers');
-    const price = formData.get('price') as string;
+        : (formData.get('updtYear') as unknown as number);
+    const kilometers = formData.get('updtKilometers');
+    const price = formData.get('updtPrice') as string;
 
     if (brand === '' || model === '' || kilometers == null || price === '') {
       return;
@@ -48,6 +49,11 @@ export const UpdateCar: React.FC<Props> = ({
     hideDialog();
   };
 
+  useEffect(() => {
+    console.log(`QTFG ${updateDlgData.kilometers}`);
+    console.log(updateDlgData);
+  }, [updateDlgData]);
+
   return (
     <Modal show={visible} onHide={hideDialog}>
       <Form onSubmit={handleUpdate}>
@@ -60,7 +66,7 @@ export const UpdateCar: React.FC<Props> = ({
               <FloatingLabel controlId="floatingUpdateBrand" label="Brand">
                 <Form.Select
                   aria-label="Brand"
-                  name="brand"
+                  name="updtBrand"
                   defaultValue={updateDlgData.brand}
                   required
                 >
@@ -76,7 +82,7 @@ export const UpdateCar: React.FC<Props> = ({
                 <Form.Control
                   type="input"
                   placeholder="Model"
-                  name="model"
+                  name="updtModel"
                   defaultValue={updateDlgData.model}
                   required
                 />
@@ -89,7 +95,7 @@ export const UpdateCar: React.FC<Props> = ({
                 <Form.Control
                   type="input"
                   placeholder="Description"
-                  name="description"
+                  name="updtDescription"
                   defaultValue={updateDlgData.description}
                 />
               </FloatingLabel>
@@ -98,7 +104,7 @@ export const UpdateCar: React.FC<Props> = ({
               <FloatingLabel controlId="floatingUpdateYear" label="Year">
                 <Form.Select
                   aria-label="Year"
-                  name="year"
+                  name="updtYear"
                   defaultValue={updateDlgData.year}
                 >
                   <option></option>
@@ -117,7 +123,7 @@ export const UpdateCar: React.FC<Props> = ({
                 <Form.Control
                   type="text"
                   placeholder="1000"
-                  name="kilometers"
+                  name="updtKilometers"
                   defaultValue={updateDlgData.kilometers}
                   required
                 />
@@ -128,7 +134,7 @@ export const UpdateCar: React.FC<Props> = ({
                 <Form.Control
                   type="text"
                   placeholder="$100,000"
-                  name="price"
+                  name="updtPrice"
                   defaultValue={updateDlgData.price}
                   required
                 />
