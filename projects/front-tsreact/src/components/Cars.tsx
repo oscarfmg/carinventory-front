@@ -6,7 +6,7 @@ import Table from 'react-bootstrap/Table';
 interface Props {
   cars: CarList;
   deleteCar: (id: number) => void;
-  setModalShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalShow: (show: boolean, id: number) => void;
 }
 
 export const Cars: React.FC<Props> = ({ cars, deleteCar, setModalShow }) => {

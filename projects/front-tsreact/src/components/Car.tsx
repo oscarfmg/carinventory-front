@@ -4,7 +4,7 @@ import React from 'react';
 
 interface Props extends CarType {
   deleteCar: (id: number) => void;
-  setModalShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalShow: (show: boolean, id: number) => void;
 }
 
 export const Car: React.FC<Props> = ({
@@ -32,7 +32,7 @@ export const Car: React.FC<Props> = ({
           <Button
             variant="warning"
             onClick={() => {
-              setModalShow(true);
+              setModalShow(true, id);
             }}
           >
             Edit

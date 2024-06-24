@@ -1,4 +1,4 @@
-import { type CarList } from '../types';
+import { type Car, type CarList } from '../types';
 
 export const mockCars: CarList = [
   {
@@ -38,3 +38,13 @@ export const mockCars: CarList = [
     year: 4,
   },
 ];
+
+export const emptyCar: Car = {
+  id: -1,
+  model: '',
+  brand: '',
+  kilometers: -1,
+  price: '',
+  description: '',
+  year: -1,
+};

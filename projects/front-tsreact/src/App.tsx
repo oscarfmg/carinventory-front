@@ -6,19 +6,34 @@ import { CreateCar } from './components/CreateCar';
 import { UpdateCar } from './components/UpdateCar';
 
 function App(): JSX.Element {
-  const { cars, modalShow, setModalShow, handleDelete, handleCreate } =
-    useCars();
+  const {
+    cars,
+    handleCreate,
+    handleUpdate,
+    handleDelete,
+    updateId,
+    modalShow,
+    modalData,
+    showUpdateModal,
+  } = useCars();
 
   return (
     <>
       <h1>Car Inventory</h1>
       <CreateCar createCar={handleCreate} />
-      <Cars cars={cars} deleteCar={handleDelete} setModalShow={setModalShow} />
+      <Cars
+        cars={cars}
+        deleteCar={handleDelete}
+        setModalShow={showUpdateModal}
+      />
       <UpdateCar
         modalShow={modalShow}
-        onHide={() => {
-          setModalShow(false);
+        hideModal={() => {
+          showUpdateModal(false, -1);
         }}
+        updateId={updateId}
+        modalData={modalData}
+        updateCar={handleUpdate}
       />
     </>
   );

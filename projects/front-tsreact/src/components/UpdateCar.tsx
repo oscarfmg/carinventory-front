@@ -1,20 +1,57 @@
-import React, { useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
+import { type Car as CarType } from '../types';
 
 interface Props {
   modalShow: boolean;
-  onHide: () => void;
+  updateId: number;
+  hideModal: () => void;
+  modalData: CarType;
+  updateCar: (updateCar: CarType) => void;
 }
 
-export const UpdateCar: React.FC<Props> = ({ modalShow, onHide }) => {
-  const [updateId, setId] = useState(-1);
+export const UpdateCar: React.FC<Props> = ({
+  modalShow,
+  updateId,
+  hideModal,
+  modalData,
+  updateCar,
+}) => {
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Update');
+    console.log(`Update ${updateId}`);
+
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const brand = formData.get('brand') as string;
+    const model = formData.get('model') as string;
+    const description = formData.get('description') as string;
+    const year =
+      formData.get('year') === ''
+        ? -1
+        : (formData.get('year') as unknown as number);
+    const kilometers = formData.get('kilometers');
+    const price = formData.get('price') as string;
+
+    if (brand === '' || model === '' || kilometers == null || price === '') {
+      return;
+    }
+    const newCar: CarType = {
+      id: updateId,
+      brand,
+      model,
+      description,
+      year,
+      kilometers: kilometers as unknown as number,
+      price,
+    };
+
+    updateCar(newCar);
+    hideModal();
   };
 
   return (
-    <Modal show={modalShow} onHide={onHide}>
+    <Modal show={modalShow} onHide={hideModal}>
       <Form onSubmit={handleUpdate}>
         <Modal.Header closeButton>
           <Modal.Title>Update Car</Modal.Title>
@@ -23,7 +60,12 @@ export const UpdateCar: React.FC<Props> = ({ modalShow, onHide }) => {
           <Row className="mb-2">
             <Col md>
               <FloatingLabel controlId="floatingUpdateBrand" label="Brand">
-                <Form.Select aria-label="Brand" name="brand" required>
+                <Form.Select
+                  aria-label="Brand"
+                  name="brand"
+                  defaultValue={modalData.brand}
+                  required
+                >
                   <option>Honda</option>
                   <option>Nissan</option>
                   <option>Toyota</option>
@@ -37,6 +79,7 @@ export const UpdateCar: React.FC<Props> = ({ modalShow, onHide }) => {
                   type="input"
                   placeholder="Model"
                   name="model"
+                  defaultValue={modalData.model}
                   required
                 />
               </FloatingLabel>
@@ -49,12 +92,17 @@ export const UpdateCar: React.FC<Props> = ({ modalShow, onHide }) => {
                   type="input"
                   placeholder="Description"
                   name="description"
+                  defaultValue={modalData.description}
                 />
               </FloatingLabel>
             </Col>
             <Col md>
               <FloatingLabel controlId="floatingUpdateYear" label="Year">
-                <Form.Select aria-label="Year" name="year">
+                <Form.Select
+                  aria-label="Year"
+                  name="year"
+                  defaultValue={modalData.year}
+                >
                   <option></option>
                   {Array.from({ length: 21 }, (_, idx) => 2004 + idx).map(
                     (i) => (
@@ -72,6 +120,7 @@ export const UpdateCar: React.FC<Props> = ({ modalShow, onHide }) => {
                   type="text"
                   placeholder="1000"
                   name="kilometers"
+                  defaultValue={modalData.kilometers}
                   required
                 />
               </FloatingLabel>
@@ -82,6 +131,7 @@ export const UpdateCar: React.FC<Props> = ({ modalShow, onHide }) => {
                   type="text"
                   placeholder="$100,000"
                   name="price"
+                  defaultValue={modalData.price}
                   required
                 />
               </FloatingLabel>
@@ -90,7 +140,7 @@ export const UpdateCar: React.FC<Props> = ({ modalShow, onHide }) => {
           <div className="mt-3 d-flex justify-content-end"></div>
         </Modal.Body>
         <Modal.Footer>
-          <Button type="button" onClick={onHide} variant="secondary">
+          <Button type="button" onClick={hideModal} variant="secondary">
             Close
           </Button>
           <Button type="submit" variant="primary">
