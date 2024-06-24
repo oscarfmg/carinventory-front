@@ -11,10 +11,9 @@ function App(): JSX.Element {
     handleCreate,
     handleUpdate,
     handleDelete,
-    updateId,
-    modalShow,
-    modalData,
-    showUpdateModal,
+    dialogVisible,
+    updateDlgData,
+    showUpdateDialog,
   } = useCars();
 
   return (
@@ -24,15 +23,14 @@ function App(): JSX.Element {
       <Cars
         cars={cars}
         deleteCar={handleDelete}
-        setModalShow={showUpdateModal}
+        setModalShow={showUpdateDialog}
       />
       <UpdateCar
-        modalShow={modalShow}
-        hideModal={() => {
-          showUpdateModal(false, -1);
+        visible={dialogVisible}
+        hideDialog={() => {
+          showUpdateDialog(false, -1);
         }}
-        updateId={updateId}
-        modalData={modalData}
+        updateDlgData={updateDlgData}
         updateCar={handleUpdate}
       />
     </>

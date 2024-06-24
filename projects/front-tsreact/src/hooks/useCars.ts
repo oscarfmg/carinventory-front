@@ -11,26 +11,14 @@ export const useCars = (): {
   handleCreate: (newCar: NewCarType) => void;
   handleUpdate: (updateCar: CarType) => void;
   handleDelete: (id: number) => void;
-  showUpdateModal: (show: boolean, id: number) => void;
-  updateId: number;
-  modalShow: boolean;
-  modalData: CarType;
+  showUpdateDialog: (visible: boolean, id: number) => void;
+  dialogVisible: boolean;
+  updateDlgData: CarType;
 } => {
   const [cars, setCars] = useState(mockCars);
-  const [modalShow, setModalShow] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(false);
   const [updateId, setUpdateId] = useState(-1);
-  const [modalData, setModalData] = useState(emptyCar);
-
-  useEffect(() => {
-    console.log(`Update ${updateId}`);
-    if (updateId < 0) {
-      const newModalData = emptyCar;
-      setModalData(newModalData);
-      return;
-    }
-    const newModalData = cars[updateId - 1];
-    setModalData(newModalData);
-  }, [updateId]);
+  const [updateDlgData, setUpdateDlgData] = useState(emptyCar);
 
   const handleCreate = (newCar: NewCarType): void => {
     console.log('Create');
@@ -51,26 +39,36 @@ export const useCars = (): {
     setCars(newCars);
   };
 
+  useEffect(() => {
+    console.log(`Update ${updateId}`);
+    if (updateId < 0) {
+      const newModalData = emptyCar;
+      setUpdateDlgData(newModalData);
+      return;
+    }
+    const newModalData = cars[updateId - 1];
+    setUpdateDlgData(newModalData);
+  }, [updateId]);
+
+  const showUpdateDialog = (visible: boolean, id: number = 0): void => {
+    console.log(`Update ${id}`);
+    setUpdateId(id);
+    setDialogVisible(visible);
+  };
+
   const handleDelete = (id: number): void => {
     console.log(id);
     const newCars = cars.filter((car) => car.id !== id);
     setCars(newCars);
   };
 
-  const showUpdateModal = (show: boolean, id: number = 0): void => {
-    console.log(`Update ${id}`);
-    setUpdateId(id);
-    setModalShow(show);
-  };
-
   return {
     cars,
     handleCreate,
     handleDelete,
-    modalShow,
     handleUpdate,
-    showUpdateModal,
-    updateId,
-    modalData,
+    showUpdateDialog,
+    dialogVisible,
+    updateDlgData,
   };
 };

@@ -2,23 +2,21 @@ import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 import { type Car as CarType } from '../types';
 
 interface Props {
-  modalShow: boolean;
-  updateId: number;
-  hideModal: () => void;
-  modalData: CarType;
+  visible: boolean;
+  updateDlgData: CarType;
+  hideDialog: () => void;
   updateCar: (updateCar: CarType) => void;
 }
 
 export const UpdateCar: React.FC<Props> = ({
-  modalShow,
-  updateId,
-  hideModal,
-  modalData,
+  visible,
+  hideDialog,
+  updateDlgData,
   updateCar,
 }) => {
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`Update ${updateId}`);
+    console.log(`Update ${updateDlgData.id}`);
 
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -37,7 +35,7 @@ export const UpdateCar: React.FC<Props> = ({
       return;
     }
     const newCar: CarType = {
-      id: updateId,
+      id: updateDlgData.id,
       brand,
       model,
       description,
@@ -47,11 +45,11 @@ export const UpdateCar: React.FC<Props> = ({
     };
 
     updateCar(newCar);
-    hideModal();
+    hideDialog();
   };
 
   return (
-    <Modal show={modalShow} onHide={hideModal}>
+    <Modal show={visible} onHide={hideDialog}>
       <Form onSubmit={handleUpdate}>
         <Modal.Header closeButton>
           <Modal.Title>Update Car</Modal.Title>
@@ -63,7 +61,7 @@ export const UpdateCar: React.FC<Props> = ({
                 <Form.Select
                   aria-label="Brand"
                   name="brand"
-                  defaultValue={modalData.brand}
+                  defaultValue={updateDlgData.brand}
                   required
                 >
                   <option>Honda</option>
@@ -79,7 +77,7 @@ export const UpdateCar: React.FC<Props> = ({
                   type="input"
                   placeholder="Model"
                   name="model"
-                  defaultValue={modalData.model}
+                  defaultValue={updateDlgData.model}
                   required
                 />
               </FloatingLabel>
@@ -92,7 +90,7 @@ export const UpdateCar: React.FC<Props> = ({
                   type="input"
                   placeholder="Description"
                   name="description"
-                  defaultValue={modalData.description}
+                  defaultValue={updateDlgData.description}
                 />
               </FloatingLabel>
             </Col>
@@ -101,7 +99,7 @@ export const UpdateCar: React.FC<Props> = ({
                 <Form.Select
                   aria-label="Year"
                   name="year"
-                  defaultValue={modalData.year}
+                  defaultValue={updateDlgData.year}
                 >
                   <option></option>
                   {Array.from({ length: 21 }, (_, idx) => 2004 + idx).map(
@@ -120,7 +118,7 @@ export const UpdateCar: React.FC<Props> = ({
                   type="text"
                   placeholder="1000"
                   name="kilometers"
-                  defaultValue={modalData.kilometers}
+                  defaultValue={updateDlgData.kilometers}
                   required
                 />
               </FloatingLabel>
@@ -131,7 +129,7 @@ export const UpdateCar: React.FC<Props> = ({
                   type="text"
                   placeholder="$100,000"
                   name="price"
-                  defaultValue={modalData.price}
+                  defaultValue={updateDlgData.price}
                   required
                 />
               </FloatingLabel>
@@ -140,7 +138,7 @@ export const UpdateCar: React.FC<Props> = ({
           <div className="mt-3 d-flex justify-content-end"></div>
         </Modal.Body>
         <Modal.Footer>
-          <Button type="button" onClick={hideModal} variant="secondary">
+          <Button type="button" onClick={hideDialog} variant="secondary">
             Close
           </Button>
           <Button type="submit" variant="primary">
