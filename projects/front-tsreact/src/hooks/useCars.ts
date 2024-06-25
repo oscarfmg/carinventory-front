@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { emptyCar, mockCars } from '../mocks/mockCars';
-import { deleteCar, fetchCars, pushCar, replaceCar } from '../services/cars';
+import {
+  deleteCar,
+  fetchCars,
+  getCarCount,
+  pushCar,
+  replaceCar,
+} from '../services/cars';
 import {
   type CarList,
   type Car as CarType,
@@ -15,11 +21,19 @@ export const useCars = (): {
   setUpdateId: (id: number) => void;
   dialogVisible: boolean;
   updateDlgData: CarType;
+  carCount: number;
+  activePage: number;
+  setActivePage: (page: number) => void;
+  carsXPage: number;
 } => {
+  const carsXPage = 4;
+
   const [cars, setCars] = useState(mockCars);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [updateId, _setUpdateId] = useState(0);
   const [updateDlgData, setUpdateDlgData] = useState(emptyCar);
+  const [carCount, setCarCount] = useState(0);
+  const [activePage, setActivePage] = useState(0);
 
   const handleCreate = (newCar: NewCarType): void => {
     const newcar: CarType = { id: -1, ...newCar };
@@ -37,14 +51,24 @@ export const useCars = (): {
   };
 
   useEffect(() => {
-    fetchCars()
+    getCarCount()
+      .then((count) => {
+        setCarCount(count);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchCars(activePage * carsXPage, carsXPage)
       .then((cars) => {
         setCars(cars);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [carCount, activePage]);
 
   const handleUpdate = (updateCar: CarType): void => {
     console.log(updateCar);
@@ -104,5 +128,9 @@ export const useCars = (): {
     setUpdateId,
     dialogVisible,
     updateDlgData,
+    carCount,
+    activePage,
+    setActivePage,
+    carsXPage,
   };
 };

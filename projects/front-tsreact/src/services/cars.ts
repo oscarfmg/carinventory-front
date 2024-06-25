@@ -3,8 +3,21 @@ import { type Car, type CarList } from '../types';
 
 const kProductApi = '/api';
 
-export const fetchCars = async (): Promise<CarList> => {
-  const res = await fetch(kProductApi);
+export const getCarCount = async (): Promise<number> => {
+  const res = await fetch(`${kProductApi}/getCount`);
+  if (!res.ok) {
+    console.error('BBB');
+    return 0;
+  }
+  const { count: total } = (await res.json()) as { count: number };
+  return total;
+};
+
+export const fetchCars = async (
+  start: number = 0,
+  limit: number = 0
+): Promise<CarList> => {
+  const res = await fetch(`${kProductApi}?start=${start}&limit=${limit}`);
   if (!res.ok) {
     console.error('BBB');
     return [];
