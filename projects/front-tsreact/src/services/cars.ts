@@ -6,7 +6,7 @@ const kProductApi = '/api';
 export const getCarCount = async (): Promise<number> => {
   const res = await fetch(`${kProductApi}/getCount`);
   if (!res.ok) {
-    console.error('BBB');
+    console.error('Error getting the product count.');
     return 0;
   }
   const { count: total } = (await res.json()) as { count: number };
@@ -19,7 +19,7 @@ export const fetchCars = async (
 ): Promise<CarList> => {
   const res = await fetch(`${kProductApi}?start=${start}&limit=${limit}`);
   if (!res.ok) {
-    console.error('BBB');
+    console.error('Error fetching the products.');
     return [];
   }
   const cars = (await res.json()) as CarList;
@@ -27,9 +27,8 @@ export const fetchCars = async (
 };
 
 export const pushCar = async (car: Car): Promise<Car> => {
-  console.log(car);
   if (car.id <= 0) {
-    console.error('BBB');
+    console.error('Error creating a new product.');
     return emptyCar;
   }
   const res = await fetch(`${kProductApi}/${car.id}`, {
@@ -42,9 +41,8 @@ export const pushCar = async (car: Car): Promise<Car> => {
 };
 
 export const replaceCar = async (car: Car): Promise<Car> => {
-  console.log(car);
   if (car.id <= 0) {
-    console.error('BBB');
+    console.error('Error updating the product.');
     return emptyCar;
   }
   const res = await fetch(`${kProductApi}/${car.id}`, {
@@ -60,9 +58,9 @@ export const replaceCar = async (car: Car): Promise<Car> => {
 };
 
 export const deleteCar = async (id: number): Promise<Car> => {
-  console.log(id);
   const res = await fetch(`${kProductApi}/${id}`, { method: 'DELETE' });
   if (!res.ok) {
+    console.error('Error deleting the product.');
     return emptyCar;
   }
   const deletedCar = (await res.json()) as Car;

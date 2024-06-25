@@ -41,7 +41,6 @@ export const useCars = (): {
     newcar.id = lastCar !== undefined ? lastCar.id + 1 : 1;
     pushCar(newcar)
       .then((createdCar) => {
-        console.log(createdCar);
         const newCars = [...cars, { ...createdCar }];
         setCars(newCars);
       })
@@ -71,10 +70,8 @@ export const useCars = (): {
   }, [carCount, activePage]);
 
   const handleUpdate = (updateCar: CarType): void => {
-    console.log(updateCar);
     replaceCar(updateCar)
       .then((newCar) => {
-        console.log(newCar);
         const newCars = cars.map((car) => {
           if (car.id === newCar.id) {
             return newCar;
@@ -109,7 +106,6 @@ export const useCars = (): {
   const handleDelete = (id: number): void => {
     deleteCar(id)
       .then((deletedCar) => {
-        console.log(deletedCar);
         if (deletedCar.id !== -1) {
           const newCars = cars.filter((car) => car.id !== id);
           setCars(newCars);

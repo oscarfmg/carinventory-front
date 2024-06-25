@@ -23,7 +23,6 @@ export const CarPagination: React.FC<Props> = ({
 
   useEffect(() => {
     setTotalPages(Math.ceil(carCount / carsXPage));
-    console.log(Math.ceil(carCount / carsXPage));
   }, [carCount]);
 
   useEffect(() => {
@@ -34,7 +33,6 @@ export const CarPagination: React.FC<Props> = ({
           key={i}
           active={i === activePage}
           onClick={() => {
-            console.log(`QTFG ${i}`);
             setActivePage(i);
           }}
         >

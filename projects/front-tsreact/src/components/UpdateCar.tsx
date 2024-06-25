@@ -16,7 +16,6 @@ export const UpdateCar: React.FC<Props> = ({
 }) => {
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`Update ${updateDlgData.id}`);
 
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
