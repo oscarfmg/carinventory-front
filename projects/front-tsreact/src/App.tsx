@@ -4,6 +4,7 @@ import { Cars } from './components/Cars';
 import { useCars } from './hooks/useCars';
 import { CreateCar } from './components/CreateCar';
 import { UpdateCar } from './components/UpdateCar';
+import { CarPagination } from './components/CarPagination';
 
 function App(): JSX.Element {
   const {
@@ -14,6 +15,10 @@ function App(): JSX.Element {
     dialogVisible,
     updateDlgData,
     setUpdateId,
+    carCount,
+    activePage,
+    setActivePage,
+    carsXPage,
   } = useCars();
 
   return (
@@ -21,6 +26,13 @@ function App(): JSX.Element {
       <h1>Car Inventory</h1>
       <CreateCar createCar={handleCreate} />
       <Cars cars={cars} deleteCar={handleDelete} setUpdateId={setUpdateId} />
+      <CarPagination
+        cars={cars}
+        carsXPage={carsXPage}
+        carCount={carCount}
+        activePage={activePage}
+        setActivePage={setActivePage}
+      />
       <UpdateCar
         visible={dialogVisible}
         updateDlgData={updateDlgData}
