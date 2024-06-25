@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { emptyCar, mockCars } from '../mocks/mockCars';
+import { deleteCar, fetchCars, pushCar, replaceCar } from '../services/cars';
 import {
   type CarList,
   type Car as CarType,
@@ -21,18 +22,46 @@ export const useCars = (): {
   const [updateDlgData, setUpdateDlgData] = useState(emptyCar);
 
   const handleCreate = (newCar: NewCarType): void => {
-    const newCars = [...cars, { id: cars.length + 1, ...newCar }];
-    setCars(newCars);
+    const newcar: CarType = { id: -1, ...newCar };
+    const lastCar = cars.at(-1);
+    newcar.id = lastCar !== undefined ? lastCar.id + 1 : 1;
+    pushCar(newcar)
+      .then((createdCar) => {
+        console.log(createdCar);
+        const newCars = [...cars, { ...createdCar }];
+        setCars(newCars);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
+  useEffect(() => {
+    fetchCars()
+      .then((cars) => {
+        setCars(cars);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   const handleUpdate = (updateCar: CarType): void => {
-    const newCars = cars.map((car) => {
-      if (car.id === updateCar.id) {
-        return updateCar;
-      }
-      return car;
-    });
-    setCars(newCars);
+    console.log(updateCar);
+    replaceCar(updateCar)
+      .then((newCar) => {
+        console.log(newCar);
+        const newCars = cars.map((car) => {
+          if (car.id === newCar.id) {
+            return newCar;
+          }
+          return car;
+        });
+        setCars(newCars);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   useEffect(() => {
@@ -54,8 +83,17 @@ export const useCars = (): {
   };
 
   const handleDelete = (id: number): void => {
-    const newCars = cars.filter((car) => car.id !== id);
-    setCars(newCars);
+    deleteCar(id)
+      .then((deletedCar) => {
+        console.log(deletedCar);
+        if (deletedCar.id !== -1) {
+          const newCars = cars.filter((car) => car.id !== id);
+          setCars(newCars);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return {
