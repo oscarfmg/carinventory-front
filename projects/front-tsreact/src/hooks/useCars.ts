@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { emptyCar, mockCars } from '../mocks/mockCars';
 import {
   deleteCar,
@@ -13,6 +13,107 @@ import {
   type NewCar as NewCarType,
 } from '../types';
 
+const initialCarsXPage = 4;
+
+const initialState = {
+  cars: mockCars,
+  dialogVisible: false,
+  updateId: 0,
+  updateDlgData: emptyCar,
+  carCount: -1,
+  activePage: 0,
+  carsXPage: initialCarsXPage,
+};
+
+interface ProductState {
+  cars: CarList;
+  dialogVisible: boolean;
+  updateId: number;
+  updateDlgData: CarType;
+  carCount: number;
+  activePage: number;
+  carsXPage: number;
+}
+
+export enum ProductActionTypes {
+  kAddCar = 1,
+  kUpdateCar,
+  kDeleteCar,
+  kInitCars,
+  kChangeActivePage,
+  kUpdateCarCount,
+  kChangeUpdateID,
+}
+
+type ProductAction =
+  | { type: ProductActionTypes.kDeleteCar; payload: { id: number } }
+  | { type: ProductActionTypes.kUpdateCar; payload: { car: CarType } }
+  | { type: ProductActionTypes.kAddCar; payload: { newCar: CarType } }
+  | { type: ProductActionTypes.kUpdateCarCount; payload: { carCount: number } }
+  | { type: ProductActionTypes.kInitCars; payload: { cars: CarList } }
+  | { type: ProductActionTypes.kChangeUpdateID; payload: { id: number } }
+  | {
+      type: ProductActionTypes.kChangeActivePage;
+      payload: { cars: CarList; page: number };
+    };
+
+export const carReducer = (
+  state: ProductState,
+  action: ProductAction
+): ProductState => {
+  const { type, payload } = action;
+
+  if (type === ProductActionTypes.kAddCar) {
+    const newCars = [...state.cars, payload.newCar];
+    return { ...state, cars: newCars };
+  }
+
+  if (type === ProductActionTypes.kUpdateCar) {
+    const newCar = payload.car;
+    const newCars = state.cars.map((car) => {
+      if (car.id === newCar.id) {
+        return newCar;
+      }
+      return car;
+    });
+    const newState = { ...state, cars: newCars };
+    return newState;
+  }
+
+  if (type === ProductActionTypes.kDeleteCar) {
+    return {
+      ...state,
+      cars: state.cars.filter((car) => car.id !== payload.id),
+    };
+  }
+
+  if (type === ProductActionTypes.kChangeUpdateID) {
+    const updateId = payload.id;
+    const newModalData =
+      updateId === 0
+        ? emptyCar
+        : state.cars.find((car) => car.id === updateId) ?? emptyCar;
+    return {
+      ...state,
+      updateDlgData: newModalData,
+      dialogVisible: updateId !== 0,
+    };
+  }
+
+  if (type === ProductActionTypes.kInitCars) {
+    return { ...state, cars: payload.cars };
+  }
+
+  if (type === ProductActionTypes.kUpdateCarCount) {
+    return { ...state, carCount: payload.carCount };
+  }
+
+  if (type === ProductActionTypes.kChangeActivePage) {
+    return { ...state, cars: payload.cars, activePage: payload.page };
+  }
+  return state;
+};
+
 export const useCars = (): {
   cars: CarList;
   handleCreate: (newCar: NewCarType) => void;
@@ -26,14 +127,10 @@ export const useCars = (): {
   setActivePage: (page: number) => void;
   carsXPage: number;
 } => {
-  const carsXPage = 4;
-
-  const [cars, setCars] = useState(mockCars);
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [updateId, _setUpdateId] = useState(0);
-  const [updateDlgData, setUpdateDlgData] = useState(emptyCar);
-  const [carCount, setCarCount] = useState(0);
-  const [activePage, setActivePage] = useState(0);
+  const [
+    { cars, dialogVisible, updateDlgData, carCount, activePage, carsXPage },
+    dispatch,
+  ] = useReducer(carReducer, initialState);
 
   const handleCreate = (newCar: NewCarType): void => {
     const newcar: CarType = { id: -1, ...newCar };
@@ -41,8 +138,10 @@ export const useCars = (): {
     newcar.id = lastCar !== undefined ? lastCar.id + 1 : 1;
     pushCar(newcar)
       .then((createdCar) => {
-        const newCars = [...cars, { ...createdCar }];
-        setCars(newCars);
+        dispatch({
+          type: ProductActionTypes.kAddCar,
+          payload: { newCar: createdCar },
+        });
       })
       .catch((err) => {
         console.error(err);
@@ -50,66 +149,67 @@ export const useCars = (): {
   };
 
   useEffect(() => {
-    getCarCount()
-      .then((count) => {
-        setCarCount(count);
+    if (carCount === -1) {
+      getCarCount()
+        .then((carCount) => {
+          dispatch({
+            type: ProductActionTypes.kUpdateCarCount,
+            payload: { carCount },
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    fetchCars(activePage * carsXPage, carsXPage)
+      .then((cars) => {
+        dispatch({ type: ProductActionTypes.kInitCars, payload: { cars } });
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
 
-  useEffect(() => {
-    fetchCars(activePage * carsXPage, carsXPage)
-      .then((cars) => {
-        setCars(cars);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [carCount, activePage]);
-
   const handleUpdate = (updateCar: CarType): void => {
     replaceCar(updateCar)
       .then((newCar) => {
-        const newCars = cars.map((car) => {
-          if (car.id === newCar.id) {
-            return newCar;
-          }
-          return car;
+        dispatch({
+          type: ProductActionTypes.kUpdateCar,
+          payload: { car: newCar },
         });
-        setCars(newCars);
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
-  useEffect(() => {
-    if (updateId === 0) {
-      const newModalData = emptyCar;
-      setUpdateDlgData(newModalData);
-      return;
-    }
-    const newModalData = cars[updateId - 1];
-    setUpdateDlgData(newModalData);
-  }, [updateId]);
-
-  useEffect(() => {
-    setDialogVisible(updateId !== 0);
-  }, [updateDlgData]);
-
   const setUpdateId = (id: number = 0): void => {
-    _setUpdateId(id);
+    dispatch({ type: ProductActionTypes.kChangeUpdateID, payload: { id } });
   };
 
   const handleDelete = (id: number): void => {
     deleteCar(id)
       .then((deletedCar) => {
         if (deletedCar.id !== -1) {
-          const newCars = cars.filter((car) => car.id !== id);
-          setCars(newCars);
+          dispatch({
+            type: ProductActionTypes.kDeleteCar,
+            payload: { id },
+          });
         }
+      })
+      .then((ns) => ns)
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const setActivePage = (page: number): void => {
+    fetchCars(page * carsXPage, carsXPage)
+      .then((cars) => {
+        dispatch({
+          type: ProductActionTypes.kChangeActivePage,
+          payload: { cars, page },
+        });
       })
       .catch((err) => {
         console.error(err);

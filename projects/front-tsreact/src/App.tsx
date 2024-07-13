@@ -5,6 +5,7 @@ import { useCars } from './hooks/useCars';
 import { CreateCar } from './components/CreateCar';
 import { UpdateCar } from './components/UpdateCar';
 import { CarPagination } from './components/CarPagination';
+import { CarContext } from './context/Car';
 
 function App(): JSX.Element {
   const {
@@ -22,7 +23,7 @@ function App(): JSX.Element {
   } = useCars();
 
   return (
-    <>
+    <CarContext.Provider value={{ tst: 1 }}>
       <h1>Car Inventory</h1>
       <CreateCar createCar={handleCreate} />
       <Cars cars={cars} deleteCar={handleDelete} setUpdateId={setUpdateId} />
@@ -41,7 +42,7 @@ function App(): JSX.Element {
         }}
         updateCar={handleUpdate}
       />
-    </>
+    </CarContext.Provider>
   );
 }
 
