@@ -47,8 +47,6 @@ export const UpdateCar: React.FC<Props> = ({
     hideDialog();
   };
 
-  console.log(updateDlgData);
-
   return (
     <Modal show={visible} onHide={hideDialog}>
       <Form onSubmit={handleUpdate}>

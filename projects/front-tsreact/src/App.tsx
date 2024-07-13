@@ -6,7 +6,6 @@ import { CreateCar } from './components/CreateCar';
 import { UpdateCar } from './components/UpdateCar';
 import { CarPagination } from './components/CarPagination';
 import { CarContext } from './context/Car';
-import { useEffect } from 'react';
 
 function App(): JSX.Element {
   const {
@@ -22,10 +21,6 @@ function App(): JSX.Element {
     setActivePage,
     carsXPage,
   } = useCars();
-
-  useEffect(() => {
-    console.log('CarsMODIFIED insideAPP');
-  }, [cars]);
 
   return (
     <CarContext.Provider value={{ tst: 1 }}>
@@ -43,7 +38,7 @@ function App(): JSX.Element {
         visible={dialogVisible}
         updateDlgData={updateDlgData}
         hideDialog={() => {
-          // setUpdateId(0);
+          setUpdateId(0);
         }}
         updateCar={handleUpdate}
       />
