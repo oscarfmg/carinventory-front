@@ -5,7 +5,7 @@ import { useCars } from './hooks/useCars';
 import { CreateCar } from './components/CreateCar';
 import { UpdateCar } from './components/UpdateCar';
 import { CarPagination } from './components/CarPagination';
-import { CarContext } from './context/Car';
+import { CarContext } from './contexts/Car';
 
 function App(): JSX.Element {
   const {
