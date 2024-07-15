@@ -1,23 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Pagination } from 'react-bootstrap';
-import { type CarList } from '../types';
+import { useCars } from '../hooks/useCars';
 
 type PageList = JSX.Element[];
-interface Props {
-  cars: CarList;
-  carsXPage: number;
-  carCount: number;
-  activePage: number;
-  setActivePage: (page: number) => void;
-}
 
-export const CarPagination: React.FC<Props> = ({
-  cars,
-  carsXPage,
-  carCount,
-  activePage,
-  setActivePage,
-}) => {
+export const CarPagination: React.FC = () => {
+  const { cars, carsXPage, carCount, activePage, setActivePage } = useCars();
   const [carsPags, setCarsPags] = useState([] as PageList);
   const [totalPages, setTotalPages] = useState(0);
 

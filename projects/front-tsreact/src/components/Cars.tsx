@@ -1,15 +1,10 @@
 import React from 'react';
 import { Car } from './Car';
-import type { CarList } from '../types';
 import Table from 'react-bootstrap/Table';
+import { useCars } from '../hooks/useCars';
 
-interface Props {
-  cars: CarList;
-  deleteCar: (id: number) => void;
-  setUpdateId: (id: number) => void;
-}
-
-export const Cars: React.FC<Props> = ({ cars, deleteCar, setUpdateId }) => {
+export const Cars: React.FC = () => {
+  const { cars } = useCars();
   return (
     <>
       <Table hover striped>
@@ -37,8 +32,6 @@ export const Cars: React.FC<Props> = ({ cars, deleteCar, setUpdateId }) => {
               year={car.year}
               kilometers={car.kilometers}
               price={car.price}
-              deleteCar={deleteCar}
-              setUpdateId={setUpdateId}
             />
           ))}
         </tbody>

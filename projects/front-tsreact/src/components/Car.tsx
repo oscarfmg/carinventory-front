@@ -1,11 +1,9 @@
 import { Button } from 'react-bootstrap';
 import type { Car as CarType } from '../types';
 import React from 'react';
+import { useCars } from '../hooks/useCars';
 
-interface Props extends CarType {
-  deleteCar: (id: number) => void;
-  setUpdateId: (id: number) => void;
-}
+interface Props extends CarType {}
 
 export const Car: React.FC<Props> = ({
   id,
@@ -15,9 +13,8 @@ export const Car: React.FC<Props> = ({
   year,
   kilometers,
   price,
-  deleteCar,
-  setUpdateId,
 }) => {
+  const { setUpdateId, handleDelete } = useCars();
   return (
     <>
       <tr key={id}>
@@ -42,7 +39,7 @@ export const Car: React.FC<Props> = ({
           <Button
             variant="danger"
             onClick={() => {
-              deleteCar(id);
+              handleDelete(id);
             }}
           >
             Delete

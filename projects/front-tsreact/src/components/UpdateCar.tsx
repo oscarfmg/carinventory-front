@@ -1,19 +1,19 @@
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 import { type Car as CarType } from '../types';
+import { useCars } from '../hooks/useCars';
 
-interface Props {
-  visible: boolean;
-  updateDlgData: CarType;
-  hideDialog: () => void;
-  updateCar: (updateCar: CarType) => void;
-}
+export const UpdateCar: React.FC = () => {
+  const {
+    dialogVisible: visible,
+    updateDlgData,
+    handleUpdate: updateCar,
+    setUpdateId,
+  } = useCars();
 
-export const UpdateCar: React.FC<Props> = ({
-  visible,
-  updateDlgData,
-  hideDialog,
-  updateCar,
-}) => {
+  const hideDialog = () => {
+    setUpdateId(0);
+  };
+
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
