@@ -28,10 +28,24 @@ export const fetchCars = async (
 
 export const pushCar = async (car: Car): Promise<Car> => {
   if (car.id <= 0) {
-    console.error('Error creating a new product.');
-    return emptyCar;
+    return await createCarWithoutID(car);
+  } else {
+    return await createCarWithID(car);
   }
+};
+
+const createCarWithID = async (car: Car): Promise<Car> => {
   const res = await fetch(`${kProductApi}/${car.id}`, {
+    method: 'POST',
+    headers: { 'Content-type': 'application/json' },
+    body: JSON.stringify(car),
+  });
+  const newCar = (await res.json()) as Car;
+  return newCar;
+};
+
+const createCarWithoutID = async (car: Car): Promise<Car> => {
+  const res = await fetch(`${kProductApi}`, {
     method: 'POST',
     headers: { 'Content-type': 'application/json' },
     body: JSON.stringify(car),
