@@ -42,8 +42,6 @@ export const useCarsReducer = (): {
 
   const handleCreate = (newCar: NewCarType): void => {
     const newcar: CarType = { id: -1, ...newCar };
-    const lastCar = cars.at(-1);
-    newcar.id = lastCar !== undefined ? lastCar.id + 1 : 1;
     pushCar(newcar)
       .then((createdCar) => {
         dispatch({
