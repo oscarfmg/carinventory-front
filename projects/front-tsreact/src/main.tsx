@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { CarProvider } from './contexts/Car.tsx';
+import { store } from  './stores';
+import { Provider } from 'react-redux'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <CarProvider>
+  <Provider store={store}>
     <App />
-  </CarProvider>
+  </Provider>
 );

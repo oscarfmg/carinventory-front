@@ -1,14 +1,11 @@
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 import { type Car as CarType } from '../types';
-import { useCars } from '../hooks/useCars';
+import { useAppSelector } from '../hooks/store';
+import { useCarsActions } from '../hooks/useCarsActions';
 
 export const UpdateCar: React.FC = () => {
-  const {
-    dialogVisible: visible,
-    updateDlgData,
-    handleUpdate: updateCar,
-    setUpdateId,
-  } = useCars();
+  const {dialogVisible: visible, updateDlgData} = useAppSelector((state) => state.cars);
+  const {handleUpdate: updateCar, setUpdateId} = useCarsActions();
 
   const hideDialog = () => {
     setUpdateId(0);

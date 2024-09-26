@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Pagination } from 'react-bootstrap';
-import { useCars } from '../hooks/useCars';
+import { useCarsActions } from '../hooks/useCarsActions';
+import { useAppSelector } from '../hooks/store';
 
 type PageList = JSX.Element[];
 
 export const CarPagination: React.FC = () => {
-  const { cars, carsXPage, carCount, activePage, setActivePage } = useCars();
+  const {setActivePage} = useCarsActions();
+  const {cars, carsXPage, carCount, activePage} = useAppSelector((state) => state.cars);
   const [carsPags, setCarsPags] = useState([] as PageList);
   const [totalPages, setTotalPages] = useState(0);
 
