@@ -1,10 +1,10 @@
 import React from 'react';
 import { Car } from './Car';
 import Table from 'react-bootstrap/Table';
-import { useCars } from '../hooks/useCars';
+import { useAppSelector } from '../hooks/store';
 
 export const Cars: React.FC = () => {
-  const { cars } = useCars();
+  const {cars} = useAppSelector((state) => state.cars);
   return (
     <>
       <Table hover striped>

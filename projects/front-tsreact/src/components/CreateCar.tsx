@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import { type NewCar as NewCarType } from '../types';
-import { useCars } from '../hooks/useCars';
+import { useCarsActions } from '../hooks/useCarsActions';
 
 //TODO: Fix create (let backend handles new id)
 
 export const CreateCar: React.FC = () => {
-  const { handleCreate: createCar } = useCars();
+  const { handleCreate: createCar } = useCarsActions();
 
   const handleCreate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
