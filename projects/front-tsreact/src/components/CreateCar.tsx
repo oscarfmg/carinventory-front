@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import { type NewCar as NewCarType } from '../types';
 import { useCarsActions } from '../hooks/useCarsActions';
+import { Add as AddIcon } from '../assets/add';
 
 //TODO: Fix create (let backend handles new id)
 
@@ -109,7 +110,7 @@ export const CreateCar: React.FC = () => {
       </Row>
       <div className="mt-3 d-flex justify-content-end">
         <Button type="submit" variant="primary">
-          + Add new
+          <AddIcon /> New Car
         </Button>
       </div>
     </Form>

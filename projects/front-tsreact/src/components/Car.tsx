@@ -2,6 +2,8 @@ import { Button } from 'react-bootstrap';
 import type { Car as CarType } from '../types';
 import React from 'react';
 import { useCarsActions } from '../hooks/useCarsActions';
+import {Trash as TrashIcon} from '../assets/trash'
+import {Update as UpdateIcon} from '../assets/update';
 
 interface Props extends CarType {}
 
@@ -32,7 +34,7 @@ export const Car: React.FC<Props> = ({
               setUpdateId(id);
             }}
           >
-            Edit
+            <UpdateIcon />
           </Button>
         </td>
         <td>
@@ -42,7 +44,7 @@ export const Car: React.FC<Props> = ({
               handleDelete(id);
             }}
           >
-            Delete
+            <TrashIcon />
           </Button>
         </td>
       </tr>
